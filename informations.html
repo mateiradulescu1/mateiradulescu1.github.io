@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INFO — Matei Rădulescu</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+
+   <!-- === NOUL FONT: ALEO === -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Aleo:wght@300;400;700&display=swap" rel="stylesheet">
+        
+    <style>
+        /* === RESETARE ȘI SETĂRI GENERALE === */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        html {
+            font-size: 15px; 
+        }
+        body {
+            font-family: 'Aleo', serif;
+            color: #111;
+            background-color: #fff;
+            overflow-x: hidden; 
+            cursor: url('punct.png') 16 16, auto;
+        }
+
+        a {
+            color: #111;
+            text-decoration: none;
+            cursor: url('punct2.png') 16 16, pointer;
+        }
+
+        /* === HEADER IDENTIC CU INDEX.HTML === */
+        .sidebar {
+            padding: 10px;
+            
+            /* SECRETUL MAGIC: Îl scoatem din structură și îl facem să plutească */
+            position: fixed; 
+            top: 0;
+            left: 0;
+            
+            /* Pe mobil va acoperi toată lățimea de sus pentru a nu se amesteca textul cu pozele */
+            width: 100%;  
+            z-index: 100; 
+        }
+
+        .sidebar-header h1 {
+            font-size: clamp(1.2rem, 1.0vw, 1.6rem); 
+            font-weight: normal;
+            margin: 0; 
+            margin-bottom: 1rem;
+            line-height: 1.1; 
+        }
+
+        .logo-link {
+            transition: opacity 0.3s ease;
+        }
+
+        .logo-link:hover {
+            opacity: 0.6;
+        }
+
+        /* === CONTAINER PRINCIPAL === */
+        .page-content {
+            padding: 80px 20px 60px 20px; 
+            max-width: 1800px;
+            margin: 0 auto; 
+        }
+
+        /* === SECȚIUNEA TEXT (4 COLOANE) === */
+        .text-presentation {
+            display: grid;
+            grid-template-columns: 1fr; /* 1 coloană pe mobil */
+            gap: 15px;
+            margin-bottom: 0; 
+            font-size: 1rem;
+            line-height: 1.1;
+        }
+
+        .text-presentation p {
+            margin-bottom: 1rem;
+        }
+        
+        .contact-links a {
+            display: block;
+            margin-bottom: 0.1rem;
+            text-decoration-thickness: 1px;
+            text-underline-offset: 3px;
+        }
+        
+        .contact-links a:hover {
+            opacity: 0.6;
+        }
+
+        /* Ascundem coloana 1 pe mobil, deoarece nu avem nevoie de spațiu gol acolo */
+        .col-empty {
+            display: none;
+        }
+
+        /* === SECȚIUNEA ARHIVĂ (4 COLOANE) === */
+        .archive-grid {
+            display: grid;
+            grid-template-columns: 1fr; /* 1 coloană pe mobil */
+            gap: 10px; /* Spațiu mic pe mobil */
+        }
+
+        .grid-item {
+            width: 100%;
+            height: auto;
+            display: block;
+            background-color: #f9f9f9;
+            cursor: url('punct2.png') 16 16, pointer; 
+            transition: opacity 0.3s ease;
+        }
+
+        .grid-item:hover {
+            opacity: 0.8; 
+        }
+/* === STRUCTURĂ NOUĂ PENTRU IMAGINE + TEXT === */
+        .archive-figure {
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .image-caption {
+            font-size: 0.75rem;
+            margin-top: 5px; /* Spațiu fin între fotografie și descriere */
+            line-height: 1.4;
+        }
+        /* === LIGHTBOX MODAL === */
+        .lightbox {
+            display: none; 
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.98); 
+            z-index: 9999; 
+            justify-content: center;
+            align-items: center;
+            cursor: url('punct.png') 16 16, zoom-out; 
+        }
+
+        .lightbox img {
+            max-width: 90%;
+            max-height: 90vh;
+            object-fit: contain;
+            pointer-events: none; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05); 
+        }
+
+        /* === ADAPTARE PENTRU DESKTOP === */
+        @media (min-width: 768px) {
+            
+            .sidebar { 
+                padding: 10px 40px 40px 10px; 
+                
+                /* Pe desktop, acoperă exact zona primei coloane (25%), lăsând restul ecranului liber */
+                width: 25%; 
+            }
+
+            .page-content {
+                padding: 10px 10px 80px 10px; 
+            }
+
+            .text-presentation {
+                /* 4 coloane cu spațiu controlat */
+                grid-template-columns: repeat(4, 1fr); 
+                gap: 20; /* Gap redus semnificativ */
+            }
+
+            /* Reactivăm coloana goală pe desktop pentru a împinge textul */
+            .col-empty {
+                display: block;
+            }
+
+            .archive-grid {
+                /* 4 imagini pe rând */
+                grid-template-columns: repeat(4, 1fr); 
+                gap: 4px; /* Gap mult mai strâns între fotografii */
+            }
+        }
+        body {
+            animation: aparitieLenta 0.5s ease-in-out;
+        }
+
+        @keyframes aparitieLenta {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h1><a href="index.html" class="logo-link">Matei Rădulescu</a></h1>
+        </div>
+    </aside>
+
+    <main class="page-content">
+        
+        <!-- Text 4 Coloane -->
+        <section class="text-presentation">
+            <!-- Coloana 1: Lăsată intenționat goală pe desktop pentru a respecta spațiul numelui -->
+            <div class="col-empty"></div>
+            
+            <!-- Coloana 2: Română -->
+            <div class="lang-ro">
+                RO<br>
+                <p>Grafician și artist cu un interes declarat pentru grafica de carte și ilustrație. Absolvent de Master în 2026 al Departamentului Grafică al Universității Naționale de Arte București și Licență în 2023 în cadrul aceluiași departament cu preocupări în zona de bandă desenată, grafică editorială și ilustrație. </p>
+                <p>În activitatea sa prezentă se ocupă cu crearea de imagini ce însoțesc texte editoriale, crează bandă desenată sau vizualuri pe care le integrează în publicații și cărți de artist și realizează materiale de grafică tipărite și pentru formate digitale.</p>
+            </div>
+            
+            <!-- Coloana 3: Engleză -->
+            <div class="lang-en">
+                EN<br>
+                <p>Visual artist with a strong focus on book design and illustration. He earned a Master's degree in 2026 and a Bachelor's degree in 2023 from the Graphic Arts Department at the National University of Arts in Bucharest, specializing in visual communication, illustration and editorial design.</p>
+                <p>Currently, his work involves creating illustration for editorial projects, producing personal visuals and comics integrated into self-made publications & books, and developing graphic materials for both print and digital formats.</p>
+            </div>
+
+            <!-- Coloana 4: Contact & Social & Interviews -->
+            <div class="contact-links">
+                <p style="margin-bottom: 1.5rem;">
+                    Contact<br>
+                    mateiradulescu1@gmail.com
+                </p>
+                <p style="margin-bottom: 1.5rem;">
+                    Instagram<br>
+                    <a href="https://www.instagram.com/matei.radulescu/" target="_blank">@matei.radulescu</a></p>
+                    <p><a href="https://www.linkedin.com/in/matei-r%C4%83dulescu-3126b7186/" target="_blank">LinkedIn</a>
+                </p>
+                <p>
+                    Interviews<br>
+                    <a href="https://propagarta.ro/interviuri-acasa-la-in-atelier-la/matei-radulescu-mi-se-pare-esential-ca-artist-sa-participi-in-rezidente-workshop-uri-deplasari-in-afara-practic-orice-oportunitate-care-te-scoate-din-atelierul-sau-camera-unde-lucrezi/" target="_blank">Propagarta (Romanian)</a>
+                    <a href="https://empowerartists.org/inspiratie/interviu-cu-matei-radulescu-cred-cu-tarie-in-capacitatea-desenului-si-a-imaginii-plastice-in-intelegerea-lumii-in-care-traim/" target="_blank">Empower Artists (Romanian)</a>
+                    <a href="https://dissolvedmagazine.com/ca-tanar-ai-nevoie-de-curiozitatea-si-curajul-de-a-vedea-cat-mai-multe-cu-cat-mai-putin/" target="_blank">Dissolved Magazine (Romanian)</a>
+                </p>
+            </div>
+        </section>
+
+        <!-- Galeria Arhivă (24 Imagini) -->
+        <section class="archive-grid">
+            
+            <figure class="archive-figure">
+                <img src="img/01.jpg" alt="proiect" class="grid-item">
+                <figcaption class="image-caption">uita-te dupa mine, book cover</figcaption>
+            </figure>
+            <figure class="archive-figure">
+                <img src="img/02.jpg" alt="Proiect 2" class="grid-item">
+                <figcaption class="image-caption">uita-te dupa mine, book spread</figcaption>
+            </figure>
+            <figure class="archive-figure">
+                <img src="img/03.jpg" alt="Proiect 3" class="grid-item">
+                <figcaption class="image-caption">uita-te dupa mine, book spread</figcaption>
+            </figure>
+            <figure class="archive-figure">
+                <img src="img/04.jpg" alt="Proiect 4" class="grid-item">
+                <figcaption class="image-caption">uita-te dupa mine, book spread</figcaption>
+            </figure>
+
+            <figure class="archive-figure">
+                <img src="img/05.jpg" alt="Proiect 5" class="grid-item">
+                <figcaption class="image-caption">uita-te dupa mine, book spread</figcaption>
+            </figure>
+            <figure class="archive-figure">
+                <img src="img/06.jpg" alt="Proiect 6" class="grid-item">
+                <figcaption class="image-caption">uita-te dupa mine, book spread</figcaption>
+            </figure>
+            <figure class="archive-figure">
+                <img src="img/07.jpg" alt="Proiect 7" class="grid-item">
+                <figcaption class="image-caption">Holding MA (2026) & BA (2023) Artist Books</figcaption>
+            </figure>
+            <figure class="archive-figure">
+                <img src="img/08.jpg" alt="Proiect 8" class="grid-item">
+                <figcaption class="image-caption">la dolce vita, pen marker on paper, 2026</figcaption>
+            </figure>
+
+            <figure class="archive-figure">
+                <img src="img/09.png" alt="Proiect 9" class="grid-item">
+                <figcaption class="image-caption">blink, pen on acetate sheet, envelope made by the artist ouf of tracing paper, 2026</figcaption>
+            </figure>
+            <figure class="archive-figure">
+                <img src="img/10.jpg" alt="Proiect 10" class="grid-item">
+                <figcaption class="image-caption">Brussels Sketch, brushpen in the artist's sketchbook, 2026</figcaption>
+            </figure>
+            <figure class="archive-figure">
+                <img src="img/11.jpg" alt="Proiect 11" class="grid-item">
+                <figcaption class="image-caption">New York City, pen on paper, 2023</figcaption>
+            </figure>
+            <figure class="archive-figure">
+                <img src="img/12.jpg" alt="Proiect 12" class="grid-item">
+                <figcaption class="image-caption">Poster for the Master Collective Exhibition Show</figcaption>
+            </figure>
+
+            <figure class="archive-figure">
+                <img src="img/13.jpg" alt="Proiect 13" class="grid-item">
+                <figcaption class="image-caption">Proiect 13 — Revistă</figcaption>
+            </figure>
+            <figure class="archive-figure">
+                <img src="img/14.jpg" alt="Proiect 14" class="grid-item">
+                <figcaption class="image-caption">Proiect 14 — Arhitectură</figcaption>
+            </figure>
+            <figure class="archive-figure">
+                <img src="img/15.png" alt="Proiect 15" class="grid-item">
+                <figcaption class="image-caption">hiding somewhere where I don’t fit in, pen & marker on acetate sheet, old envelope, 2026</figcaption>
+            </figure>
+            <figure class="archive-figure">
+                <img src="img/16.jpg" alt="Proiect 16" class="grid-item">
+                <figcaption class="image-caption">Layout Design for a fictional magazine</figcaption>
+            </figure>
+
+            <figure class="archive-figure">
+                <img src="img/17.jpg" alt="Proiect 17" class="grid-item">
+                <figcaption class="image-caption">Proiect 17 — Catalog</figcaption>
+            </figure>
+            <figure class="archive-figure">
+                <img src="img/18.jpg" alt="Proiect 18" class="grid-item">
+                <figcaption class="image-caption">Poster Design — PosterJam x Artown Now #5 Open Call</figcaption>
+            </figure>
+            <figure class="archive-figure">
+                <img src="img/19.jpg" alt="Proiect 19" class="grid-item">
+                <figcaption class="image-caption">Traffic at Romană, digital inverted drawing, 2026</figcaption>
+            </figure>
+            <figure class="archive-figure">
+                <img src="img/20.jpg" alt="Proiect 20" class="grid-item">
+                <figcaption class="image-caption">Wide Angle Point of View Café sketching, blue pen on paper, 2026</figcaption>
+            </figure>
+            <figure class="archive-figure">
+                <img src="img/21.jpg" alt="Proiect 21" class="grid-item">
+                <figcaption class="image-caption">Editorial Illustration for Scena9 no.6</figcaption>
+            </figure>
+            <figure class="archive-figure">
+                <img src="img/22.jpg" alt="Proiect 22" class="grid-item">
+                <figcaption class="image-caption">Editorial Illustration for Scena9 no.6</figcaption>
+            </figure>
+            <figure class="archive-figure">
+                <img src="img/23.jpg" alt="Proiect 23" class="grid-item">
+                <figcaption class="image-caption">Bucharest, pen on paper, digital collaged, 2024</figcaption>
+            </figure>
+            <figure class="archive-figure">
+                <img src="img/24.jpg" alt="Proiect 24" class="grid-item">
+                <figcaption class="image-caption">Shiny Shoes, brushpen on paper, 2024</figcaption>
+            </figure>
+            <figure class="archive-figure">
+                <img src="img/25.jpg" alt="Titlu 1" class="grid-item">
+                <figcaption class="image-caption">Pe drum și înapoi, book cover</figcaption>
+            </figure>
+            
+            <figure class="archive-figure">
+                <img src="img/26.jpg" alt="Titlu 2" class="grid-item">
+                <figcaption class="image-caption">Pe drum și înapoi, book spread</figcaption>
+            </figure>
+            
+            <figure class="archive-figure">
+                <img src="img/27.jpg" alt="Titlu 3" class="grid-item">
+                <figcaption class="image-caption">Pe drum și înapoi, book spread</figcaption>
+            </figure>
+            
+            <figure class="archive-figure">
+                <img src="img/28.jpg" alt="Titlu 4" class="grid-item">
+                <figcaption class="image-caption">Pe drum și înapoi, book spread</figcaption>
+            </figure>
+            <figure class="archive-figure">
+                <img src="img/29.jpg" alt="Titlu 1" class="grid-item">
+                <figcaption class="image-caption">Marco Polo, detail of the book cover</figcaption>
+            </figure>
+            
+            <figure class="archive-figure">
+                <img src="img/30.jpg" alt="Titlu 2" class="grid-item">
+                <figcaption class="image-caption">Marco Polo, book detail</figcaption>
+            </figure>
+            
+            <figure class="archive-figure">
+                <img src="img/31.jpg" alt="Titlu 3" class="grid-item">
+                <figcaption class="image-caption">Marco Polo, book spread detail</figcaption>
+            </figure>
+            
+            <figure class="archive-figure">
+                <img src="img/32.jpg" alt="Titlu 4" class="grid-item">
+                <figcaption class="image-caption">Marco Polo, book detail</figcaption>
+            </figure>
+        </section>
+
+    </main>
+
+    <div class="lightbox" id="lightbox-modal">
+        <img src="" alt="Imagine marita" id="lightbox-image">
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const gridItems = document.querySelectorAll('.grid-item');
+            const lightbox = document.getElementById('lightbox-modal');
+            const lightboxImage = document.getElementById('lightbox-image');
+
+            gridItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    lightboxImage.src = this.src;
+                    lightbox.style.display = 'flex';
+                });
+            });
+
+            lightbox.addEventListener('click', () => {
+                lightbox.style.display = 'none';
+                lightboxImage.src = ''; 
+            });
+        });
+    </script>
+
+</body>
+</html>
