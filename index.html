@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matei Rădulescu</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    
+   <!-- === NOUL FONT: ALEO === -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Aleo:wght@300;400;700&display=swap" rel="stylesheet">
+        
+    <style>
+        /* === RESETARE ȘI SETĂRI GENERALE === */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        html {
+            font-size: 15px; 
+        }
+        body {
+            font-family: 'Aleo', serif;
+            color: #111;
+            background-color: #fff;
+            overflow: hidden; 
+            height: 100vh; 
+            cursor: url('punct.png') 16 16, auto;   
+        }
+
+        a {
+            color: #111;
+            text-decoration: none;
+            cursor: url('punct2.png') 16 16, pointer;
+        }
+
+        /* === LAYOUT BAZĂ === */
+        .container {
+            display: flex;
+            flex-direction: column; 
+            height: 100vh; 
+        }
+
+        .sidebar {
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            flex: 0 0 auto; 
+        }
+
+        /* === TITLU ȘI TEXT === */
+        .sidebar-header h1 {
+            /* Dimensiune fluidă corectată: minim 1rem, preferat 1.0vw, maxim 1.6rem */
+            font-size: clamp(0.9rem, 1.0vw, 1.6rem); 
+            font-weight: normal;
+            margin: 0; 
+            margin-bottom: 1rem;
+            line-height: 1.1; 
+        }
+        .logo-link {
+            color: inherit;
+            text-decoration: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .logo-link:hover {
+            text-decoration: none; /* Împiedică sublinierea la hover */
+            opacity: 0.6; /* Face textul un pic mai pal pentru a arăta că e un link activ */
+        }
+        /* === LINK-UL DIN DREAPTA SUS (INFORMATIONS) === */
+        .nav-informations {
+            position: absolute; /* Îl scoate din ordinea normală și îl lasă să plutească */
+            top: 10px; /* Perfect aliniat la aceeași înălțime cu numele tău */
+            right: 10px; /* Lipit de dreapta pe ecranele mici */
+            
+            /* Preluăm exact fontul dinamic de la h1 */
+            font-size: clamp(0.9rem, 1.0vw, 1.6rem); 
+            font-weight: normal;
+            line-height: 1.1; 
+            
+            /* Setări de link */
+            color: inherit;
+            text-decoration: none;
+            transition: opacity 0.3s ease;
+            z-index: 50; /* Ne asigurăm că stă deasupra imaginilor din galerie */
+        }
+
+        .nav-informations:hover {
+            opacity: 0.6;
+        }
+        /* === TEXTUL CENTRAL JOS === */
+        .bio-centrata {
+            position: absolute;
+            bottom: 10px; /* Distanța față de marginea de jos a ecranului */
+            left: 50%;
+            transform: translateX(-50%); /* Truc matematic pentru a centra perfect un element absolut */
+            
+            text-align: center;
+            width: 90%;
+            max-width: 600px; /* Nu lasă textul să se lățească prea mult pe ecrane mari */
+            font-size: 0.8rem;
+            
+            z-index: 50; /* Îl ține deasupra galeriei de imagini */
+            }
+
+        /* === GALERIE SLIDESHOW === */
+        .gallery {
+            width: 100%;
+            
+            /* Tăiem 145px din înălțime (80px pentru sus + 65px pentru jos) */
+            height: calc(100dvh - 160px); 
+            
+            position: absolute;
+            
+            /* O împingem mai jos pentru a face loc header-ului */
+            top: 80px;
+            left: 0;
+            padding: 0 10px; /* Lăsăm padding doar pe laterale */
+            z-index: 10;
+        }
+
+        .slideshow-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            
+            /* Cursorul personalizat (asigură-te că ai poza linked-arrows.png în același folder) */
+            cursor: url('linked-arrows.png'), pointer; 
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            
+            object-fit: contain;
+            object-position: center;
+            
+            opacity: 0; 
+            transition: opacity 0.2s ease-in-out; 
+            z-index: 0;
+        }
+
+        .slide.active {
+            opacity: 1; 
+            z-index: 1;
+        }
+
+        .slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;  
+            pointer-events: none; /* Lasă click-ul să treacă prin poză către container */
+        }
+
+        .caption {
+            padding-top: 10px;
+            font-size: 0.85rem;
+            color: #555;
+            height: 30px; 
+        }
+
+        /* === ADAPTARE PENTRU DESKTOP === */
+        @media (min-width: 768px) {
+            .container {
+                flex-direction: row; 
+            }
+            .nav-informations {
+                right: 10px; /* Pe desktop îl împingem puțin mai spre centru pentru echilibru */
+            }
+            .sidebar {
+                width: 20%;
+                height: 100vh;
+                /* Padding ajustat pentru a trage textul în colțul stânga-sus */
+                padding: 10px 40px 40px 10px; 
+            }
+
+            .sidebar-header h1 { 
+                margin-bottom: 2rem; 
+            }
+
+            .sidebar-bio { 
+                margin-bottom: 3rem; 
+                font-size: 1rem; 
+            }
+            
+            .sidebar-footer { 
+                font-size: 0.9rem; 
+            }
+
+            .gallery {
+                width: 80%;
+                left: 20%; 
+                
+                /* FORȚĂM galeria să urce înapoi sus pe ecranele mari */
+                top: 0; 
+                
+                /* Păstrăm distanța ta preferată de jos */
+                height: calc(100vh - 40px); 
+                
+                padding: 40px 10px 0 0; 
+            }
+            .slide {
+                object-position: right center; /* Pe desktop îl ținem ancorat la dreapta */
+            }
+            .bio-centrata {
+                left: 10px; /* O aliniază la stânga, exact la 20px cum este și numele */
+                bottom: 10px; /* O ridică puțin pentru a respira, la nivel cu padding-ul general */
+                transform: none; /* Anulează trucul matematic de centrare */
+                text-align: left; /* Aliniază textul la stânga */
+                max-width: 250px; /* Îi limitează lățimea pentru a sta doar în zona textului, fără să intre peste galerie */
+            }
+        }
+        body {
+            animation: aparitieLenta 0.5s ease-in-out;
+        }
+
+        @keyframes aparitieLenta {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- === NOUL LINK CĂTRE PAGINA INFORMATIONS === -->
+        <a href="informations.html" class="nav-informations">Informations</a>
+
+        <aside class="sidebar">
+           <div class="sidebar-header">
+                <!-- Am adăugat tag-ul <a> cu trimitere către index.html -->
+                <h1><a href="index.html" class="logo-link">Matei Rădulescu</a></h1>
+            </div>
+            
+           <div class="bio-centrata">
+            <p>Drawings, Illustration,<br>Books & Graphic Design</p>
+        </div>
+            
+        </aside>
+
+        <main class="gallery">
+            <div class="slideshow-container">
+                
+            <img src="img/00.png" alt="Proiect 1" class="slide active">
+            <img src="img/01.jpg" alt="Proiect 2" class="slide">
+            <img src="img/02.jpg" alt="Proiect 2" class="slide">
+            <img src="img/03.jpg" alt="Proiect 3" class="slide">
+            <img src="img/04.jpg" alt="Proiect 4" class="slide">
+            
+            <img src="img/05.jpg" alt="Proiect 5" class="slide">
+            <img src="img/06.jpg" alt="Proiect 6" class="slide">
+            <img src="img/07.jpg" alt="Proiect 7" class="slide">
+            <img src="img/08.jpg" alt="Proiect 8" class="slide">
+            
+            <img src="img/09.png" alt="Proiect 9" class="slide">
+            <img src="img/10.jpg" alt="Proiect 10" class="slide">
+            <img src="img/11.jpg" alt="Proiect 11" class="slide">
+            <img src="img/12.jpg" alt="Proiect 12" class="slide">
+            
+            <img src="img/13.jpg" alt="Proiect 13" class="slide">
+            <img src="img/14.jpg" alt="Proiect 14" class="slide">
+            <img src="img/15.png" alt="Proiect 15" class="slide">
+            <img src="img/16.jpg" alt="Proiect 16" class="slide">
+            
+            <img src="img/17.jpg" alt="Proiect 17" class="slide">
+            <img src="img/18.jpg" alt="Proiect 18" class="slide">
+            <img src="img/19.jpg" alt="Proiect 19" class="slide">
+            <img src="img/20.jpg" alt="Proiect 20" class="slide">
+            
+            <img src="img/21.jpg" alt="Proiect 21" class="slide">
+            <img src="img/22.jpg" alt="Proiect 22" class="slide">
+            <img src="img/23.jpg" alt="Proiect 23" class="slide">
+            <img src="img/24.jpg" alt="Proiect 24" class="slide">
+
+             <img src="img/25.JPG" alt="Proiect 21" class="slide">
+            <img src="img/26.JPG" alt="Proiect 22" class="slide">
+            <img src="img/27.JPG" alt="Proiect 23" class="slide">
+            <img src="img/28.JPG" alt="Proiect 24" class="slide">
+
+             <img src="img/29.jpg" alt="Proiect 21" class="slide">
+            <img src="img/30.jpg" alt="Proiect 22" class="slide">
+            <img src="img/31.jpg" alt="Proiect 23" class="slide">
+            <img src="img/32.jpg" alt="Proiect 24" class="slide">
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- SCRIPT LOGICĂ SLIDESHOW CORECTAT (PAUZĂ STRICTĂ PE HOVER) -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const slides = document.querySelectorAll('.slide');
+            const slideshowContainer = document.querySelector('.slideshow-container');
+            
+            let currentIndex = 0;
+            let slideInterval; 
+
+            // Funcția pentru imaginea următoare
+            function nextSlide() {
+                slides[currentIndex].classList.remove('active');
+                currentIndex = (currentIndex + 1) % slides.length;
+                slides[currentIndex].classList.add('active');
+            }
+
+            // Funcția pentru imaginea anterioară
+            function prevSlide() {
+                slides[currentIndex].classList.remove('active');
+                currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+                slides[currentIndex].classList.add('active');
+            }
+
+            // Pornire timer (2 secunde)
+            function startSlideshow() {
+                clearInterval(slideInterval);
+                slideInterval = setInterval(nextSlide, 1000); 
+            }
+
+            // Oprire timer (Pauză)
+            function stopSlideshow() {
+                clearInterval(slideInterval); 
+            }
+
+            // Inițializare automată la încărcarea paginii
+            startSlideshow();
+
+            // Când cursorul intră pe galerie -> PAUZĂ
+            slideshowContainer.addEventListener('mouseenter', stopSlideshow);
+            
+            // Când cursorul iese de pe galerie -> RELUARE AUTOMATĂ
+            slideshowContainer.addEventListener('mouseleave', startSlideshow);
+
+            // Funcția principală de Click Zonal
+            slideshowContainer.addEventListener('click', function(event) {
+                const rect = slideshowContainer.getBoundingClientRect();
+                const containerWidth = rect.width;
+                const clickX = event.clientX - rect.left;
+                
+                // Schimbă imaginea stânga/dreapta
+                if (clickX < containerWidth / 2) {
+                    prevSlide();
+                } else {
+                    nextSlide();
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
