@@ -226,11 +226,14 @@
             0% { opacity: 0; }
             100% { opacity: 1; }
         }
-        @media (max-width: 767px) {
-            html {
-                font-size: 17px; /* Baza pe desktop este 15px. Aici mărim pentru telefoane */
+       @media (max-width: 767px) {
+            html { font-size: 17px; }
+            
+            /* Controlează exclusiv mărimea textului bio pe mobil */
+            .bio-centrata {
+                font-size: 0.75rem; /* Micșorează sau mărește acest număr (ex: 0.6rem, 0.7rem) */
             }
-            }
+        }
     </style>
 </head>
 <body>
